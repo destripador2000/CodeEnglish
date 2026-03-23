@@ -50,17 +50,22 @@ a:hover { color: var(--primary-hover); }
 
 /* Header */
 .header {
+    background-color: #0d214a;
+    width: 100%;
+    padding: 0.6rem 3rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 3rem;
-    position: relative;
-    z-index: 10;
+    position: fixed; 
+    top: 0;
+    left: 0;
+    z-index: 100; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 .logo {
     font-size: 1.5rem;
     font-weight: 800;
-    color: #1e3a8a;
+    color: #fafafa;
 }
 .header-right {
     display: flex;
@@ -70,15 +75,15 @@ a:hover { color: var(--primary-hover); }
 .btn-outline {
     padding: 0.5rem 1.5rem;
     border: 1px solid transparent;
-    background-color: #e0e7ff;
+    background-color: var(--primary-color);
     border-radius: 20px;
     font-weight: 600;
-    color: var(--primary-color);
+    color: white;
     transition: all 0.3s ease;
 }
 .btn-outline:hover {
-    background-color: var(--primary-color);
-    color: white;
+    background-color: white;
+    color: var(--primary-color);
     transform: translateY(-2px);
 }
 
@@ -96,7 +101,7 @@ a:hover { color: var(--primary-hover); }
     max-width: 450px;
     padding: 3rem;
     border-radius: 24px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 1);
 }
 
 /* Animation */

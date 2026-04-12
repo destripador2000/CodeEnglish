@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
-import { BookOpen, MessageCircle, PencilLine, Zap, Quote, Globe, Flag, Layers, LogOut, Menu, X, User } from 'lucide-react';
+import { BookOpen, MessageCircle, PencilLine, Zap, Quote, Globe, Layers, LogOut, Menu, X, User } from 'lucide-react';
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(20px); }
@@ -9,7 +9,7 @@ const fadeIn = keyframes`
 `;
 
 const Container = styled.div`
-  height: 100%; 
+  height: 100vh;
   width: 100%;
   display: flex;
   position: relative;
@@ -164,7 +164,11 @@ const MenuWrapper = styled.div`
   flex: 1;
   overflow-y: auto;
   padding: 0 1rem;
-  &::-webkit-scrollbar { width: 0; }
+  
+  /* Ocultar barra en el sidebar también */
+  &::-webkit-scrollbar { display: none; }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 `;
 
 const MenuList = styled.ul`
@@ -201,7 +205,6 @@ const MenuLink = styled(Link)`
   }
 `;
 
-/* --- NUEVO: WIDGET DE PERFIL --- */
 const ProfileWidget = styled(Link)`
   display: flex;
   align-items: center;
@@ -287,16 +290,23 @@ const LogoutButton = styled.button`
 const MainContent = styled.main`
   flex: 1;
   height: 100%;
-  padding: 3rem 4rem;
+  padding: 1.5rem 3rem;
   overflow-y: auto;
   position: relative;
 
+  /* AQUÍ ESTÁ EL TRUCO PARA OCULTAR EL SCROLLBAR */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+
   @media (max-width: 1024px) { 
-    padding: 2rem; 
+    padding: 1.5rem; 
   }
   
   @media (max-width: 768px) { 
-    padding: 6rem 1.5rem 2rem 1.5rem; 
+    padding: 5rem 1.5rem 1.5rem 1.5rem; 
   }
 `;
 
@@ -323,33 +333,32 @@ const BackgroundGlow = styled.div`
 const Header = styled.header`
   position: relative;
   z-index: 1;
-  margin-bottom: 3rem;
+  margin-bottom: 1.5rem;
   animation: ${fadeIn} 0.6s ease-out;
-
-  @media (max-width: 768px) { margin-bottom: 2rem; }
 `;
 
 const Greeting = styled.h1`
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   color: white;
   font-weight: 800;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.2rem;
   line-height: 1.2;
 
-  @media (max-width: 768px) { font-size: 2rem; }
+  @media (max-width: 768px) { font-size: 1.8rem; }
 `;
 
 const SubGreeting = styled.p`
   color: #94a3b8;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  margin: 0;
 `;
 
 const CategoryGrid = styled.div`
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.2rem;
   animation: ${fadeIn} 0.8s ease-out;
 
   @media (max-width: 768px) {
@@ -361,8 +370,8 @@ const CategoryCard = styled.div`
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
-  padding: 1.8rem;
+  border-radius: 16px;
+  padding: 1.2rem 1.5rem;
   display: flex;
   flex-direction: column;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -376,35 +385,35 @@ const CategoryCard = styled.div`
 `;
 
 const CardIcon = styled.div`
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
   background: rgba(99, 102, 241, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 
   svg {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     color: #a855f7;
   }
 `;
 
 const CardTitle = styled.h3`
   color: white;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.4rem;
   margin-top: 0;
 `;
 
 const CardDesc = styled.p`
   color: #94a3b8;
-  font-size: 0.9rem;
-  line-height: 1.6;
-  margin-bottom: 1.8rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 1.2rem;
   flex: 1; 
 `;
 
@@ -412,13 +421,13 @@ const CardButton = styled(Link)`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.8rem 1.5rem;
+  padding: 0.6rem 1.2rem;
   background: #6366f1;
   color: white;
-  border-radius: 12px;
+  border-radius: 10px;
   text-decoration: none;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   transition: all 0.25s;
 
   &:hover {
@@ -427,15 +436,15 @@ const CardButton = styled(Link)`
   }
 `;
 
+// ARREGLO FUSIONADO CON DESCRIPCIONES EN INGLÉS
 const menuItems = [
-  { path: '/dashboard/vocabulary', label: 'Vocabulary', icon: BookOpen, desc: 'Construye una base sólida aprendiendo las palabras esenciales de la unidad.' },
-  { path: '/dashboard/idioms', label: 'Idioms', icon: MessageCircle, desc: 'Comprende el inglés real dominando las expresiones idiomáticas más comunes.' },
-  { path: '/dashboard/grammar', label: 'Grammar', icon: PencilLine, desc: 'Perfecciona la estructura de tus oraciones con reglas gramaticales claras.' },
-  { path: '/dashboard/verbs', label: 'Regular & Irregular Verbs', icon: Zap, desc: 'Practica y memoriza las conjugaciones verbales clave para fluidez.' },
-  { path: '/dashboard/sayings', label: 'Sayings', icon: Quote, desc: 'Conecta con la cultura del idioma a través de refranes y dichos populares.' },
-  { path: '/dashboard/countries', label: 'Countries', icon: Globe, desc: 'Explora el vocabulario geográfico y los nombres de los países.' },
-  { path: '/dashboard/nationalities', label: 'Nationalities', icon: Flag, desc: 'Aprende a describir correctamente el origen y la nacionalidad.' },
-  { path: '/dashboard/synonyms', label: 'Synonyms', icon: Layers, desc: 'Enriquece tu léxico descubriendo alternativas y matices de palabras.' },
+  { path: '/dashboard/vocabulary', label: 'Vocabulary', icon: BookOpen, desc: 'Build a solid foundation by learning the essential words of the unit.' },
+  { path: '/dashboard/idioms', label: 'Idioms', icon: MessageCircle, desc: 'Understand real English by mastering the most common idiomatic expressions.' },
+  { path: '/dashboard/grammar', label: 'Grammar', icon: PencilLine, desc: 'Perfect your sentence structure with clear grammar rules.' },
+  { path: '/dashboard/verbs', label: 'Regular & Irregular Verbs', icon: Zap, desc: 'Practice and memorize key verb conjugations for fluency.' },
+  { path: '/dashboard/sayings', label: 'Sayings', icon: Quote, desc: 'Connect with the language\'s culture through popular sayings and proverbs.' },
+  { path: '/dashboard/countries', label: 'Countries & Nationalities', icon: Globe, desc: 'Explore geographical vocabulary, origins, and nationalities.' },
+  { path: '/dashboard/synonyms', label: 'Synonyms', icon: Layers, desc: 'Enrich your lexicon by discovering word alternatives and nuances.' },
 ];
 
 export const Dashboard = () => {
@@ -482,15 +491,14 @@ export const Dashboard = () => {
           </MenuList>
         </MenuWrapper>
         
-        {/* --- EL NUEVO WIDGET DE PERFIL --- */}
+        {/* TEXTO DE PERFIL EN INGLÉS */}
         <ProfileWidget to="/dashboard/profile" onClick={() => setIsMobileMenuOpen(false)}>
           <Avatar>
             <User size={20} />
-            {/* Cuando tengas imagen del backend, usarás: <img src={user.avatarUrl} alt="Profile" /> */}
           </Avatar>
           <ProfileInfo>
             <strong>Developer</strong>
-            <span>Ver perfil y progreso</span>
+            <span>View profile & progress</span>
           </ProfileInfo>
         </ProfileWidget>
 

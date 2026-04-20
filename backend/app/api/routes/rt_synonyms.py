@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError
 
 from app.core.database import get_db
 from app.models.md_Synonyms import Synonym as tbl_Synonym
-from app.schemas.sch_synonim import SynonymResponse, SynonymCreate
+from app.schemas.sch_synonym import SynonymResponse, SynonymCreate
 
 
 router = APIRouter()

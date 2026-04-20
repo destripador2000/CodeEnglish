@@ -12,8 +12,8 @@ router = APIRouter()
 
 # API para crear una palabra de un vocabulario
 @router.post("/create_verb", response_model=VerbResponse)
-async def create_vocabulary(verb: VerbCreate,
-                            conex: AsyncSession = Depends(get_db)):
+async def create_verb(verb: VerbCreate,
+                      conex: AsyncSession = Depends(get_db)):
     try:
         verb_new = tbl_Verb(**verb.model_dump())
 

@@ -12,6 +12,10 @@ class VerbResponse(BaseModel):
     present_part: str
     past_part: str
 
+    model_config = {
+       "from_attributes": True
+    }
+
 
 # Esquema para crear verbo
 class VerbCreate(BaseModel):

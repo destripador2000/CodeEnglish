@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.future import select
 
 from app.core.database import get_db
 from app.models.md_Vocabulary import Vocabulary as tbl_Vocabulary
@@ -30,3 +31,17 @@ async def create_vocabulary(vocabulary: VocabularyCreate,
         await conex.rollback()
         print(f"Error: {ex}")
         raise HTTPException(status_code=400, detail="Error al registrar")
+
+# API para obtener vocabularios
+@router.get("/get_vocabulary")
+async def get_vocabulary(conex: AsyncSession = Depends(get_db)):
+    try: 
+        stmt = await conex.execute(select(tbl_Vocabulary))
+        vocabulary = stmt.scalars().all()
+
+        return vocabulary
+
+    except Exception as ex:
+        await conex.rollback()
+        print(f"Error: {ex}")
+        raise HTTPException(status_code=400, detail="Verbos no encontrados")

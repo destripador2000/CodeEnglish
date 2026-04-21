@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.future import select
 
 from app.core.database import get_db
 from app.models.md_Synonyms import Synonym as tbl_Synonym
@@ -10,7 +11,7 @@ from app.schemas.sch_synonym import SynonymResponse, SynonymCreate
 router = APIRouter()
 
 
-# API para crear una palabra de un vocabulario
+# API para crear una palabra de un synonym
 @router.post("/create_synonym", response_model=SynonymResponse)
 async def create_synonym(synonym: SynonymCreate,
                          conex: AsyncSession = Depends(get_db)):
@@ -31,3 +32,17 @@ async def create_synonym(synonym: SynonymCreate,
         await conex.rollback()
         print(f"Error: {ex}")
         raise HTTPException(status_code=400, detail="Error al registrar")
+
+# API para obtener synonym
+@router.get("/get_synonym")
+async def get_synonym(conex: AsyncSession = Depends(get_db)):
+    try: 
+        stmt = await conex.execute(select(tbl_Synonym))
+        synonyms = stmt.scalars().all()
+
+        return synonyms
+
+    except Exception as ex:
+        await conex.rollback()
+        print(f"Error: {ex}")
+        raise HTTPException(status_code=400, detail="Synonym no encontrados")

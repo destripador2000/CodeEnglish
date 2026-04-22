@@ -32,16 +32,20 @@ async def create_vocabulary(vocabulary: VocabularyCreate,
         print(f"Error: {ex}")
         raise HTTPException(status_code=400, detail="Error al registrar")
 
-# API para obtener vocabularios
-@router.get("/get_vocabulary")
-async def get_vocabulary(conex: AsyncSession = Depends(get_db)):
-    try: 
-        stmt = await conex.execute(select(tbl_Vocabulary))
-        vocabulary = stmt.scalars().all()
 
-        return vocabulary
+# API para obtener vocabularios
+@router.get("/vocabulary/{pages_id}")
+async def get_vocabulary(pages_id: int, conex: AsyncSession = Depends(get_db)):
+    try:
+        stmt = select(tbl_Vocabulary).where(tbl_Vocabulary.pages_id == pages_id)
+        result = await conex.execute(stmt)
+        vocabularies = result.scalars().all()
+
+        if not vocabularies:
+            raise HTTPException(status_code=400, detail="Verbos no encontrados")
+
+        return vocabularies
 
     except Exception as ex:
-        await conex.rollback()
         print(f"Error: {ex}")
-        raise HTTPException(status_code=400, detail="Verbos no encontrados")
+        raise HTTPException(status_code=500, detail="Problemas en la petición")

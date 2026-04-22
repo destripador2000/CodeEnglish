@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.future import select
+from typing import List
 
 from app.core.database import get_db
 from app.models.md_Vocabulary import Vocabulary as tbl_Vocabulary
@@ -34,7 +35,7 @@ async def create_vocabulary(vocabulary: VocabularyCreate,
 
 
 # API para obtener vocabularios
-@router.get("/vocabulary/{pages_id}")
+@router.get("/vocabulary/{pages_id}", response_model=List[VocabularyResponse])
 async def get_vocabulary(pages_id: int, conex: AsyncSession = Depends(get_db)):
     try:
         stmt = select(tbl_Vocabulary).where(tbl_Vocabulary.pages_id == pages_id)

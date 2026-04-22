@@ -4,7 +4,7 @@ from pydantic import BaseModel
 # Esquema para reponse
 class SayingResponse(BaseModel):
     id: int
-    pages_ig: int
+    pages_id: int
     saying: str
     meaning: str
     example: str
@@ -16,7 +16,7 @@ class SayingResponse(BaseModel):
 
 # Esquema para crear
 class SayingCreate(BaseModel):
-    pages_ig: int
+    pages_id: int
     saying: str
     meaning: str
     example: str

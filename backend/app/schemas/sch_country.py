@@ -9,7 +9,7 @@ class CountryResponse(BaseModel):
     adjective: str
     person: str
 
-    model_dump = {
+    model_config = {
         "from_attributes": True
     }
 

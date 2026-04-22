@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
+from typing import List
+from sqlalchemy.future import select
 
 from app.core.database import get_db
 from app.models.md_Idioms import Idiom as tbl_Idiom
@@ -31,3 +33,21 @@ async def create_idiom(idiom: IdiomCreate,
         await conex.rollback()
         print(f"Error: {ex}")
         raise HTTPException(status_code=400, detail="Error al registrar")
+
+
+# API para obtener idiom
+@router.get("/idiom,{pages_id}", response_model= List[IdiomResponse])
+async def get_idiom(pages_id: int, conex: AsyncSession = Depends(get_db)):
+    try:
+        stmt = select(tbl_Idiom).where(tbl_Idiom.pages_id == pages_id)
+        result = await conex.execute(stmt)
+        idiom = result.scalars().all()
+
+        if not idiom:
+            raise HTTPException(status_code=400, detail="Saying no encontrados")
+
+        return idiom
+
+    except Exception as ex:
+        print(f"Error: {ex}")
+        raise HTTPException(status_code=500, detail="Problemas con la petición")

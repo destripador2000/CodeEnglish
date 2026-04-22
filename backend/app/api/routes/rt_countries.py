@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
+from typing import List
+from sqlalchemy.future import select
 
 from app.core.database import get_db
 from app.models.md_Countries import Country as tbl_Country
@@ -32,3 +34,20 @@ async def create_country(country: CountryCreate,
         print(f"Error: {ex}")
         raise HTTPException(status_code=400, detail="Error al registrar")
 
+
+# API para obtener country
+@router.get("/country,{pages_id}", response_model= List[CountryResponse])
+async def get_idiom(pages_iD: int, conex: AsyncSession = Depends(get_db)):
+    try:
+        stmt = select(tbl_Country).where(tbl_Country.pages_iD == pages_iD)
+        result = await conex.execute(stmt)
+        country = result.scalars().all()
+
+        if not country:
+            raise HTTPException(status_code=400, detail="Saying no encontrados")
+
+        return country
+
+    except Exception as ex:
+        print(f"Error: {ex}")
+        raise HTTPException(status_code=500, detail="Problemas con la petición")

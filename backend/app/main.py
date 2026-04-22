@@ -6,6 +6,7 @@ from app.api.routes.rt_pages import router as router_Page
 from app.api.routes.rt_vocabularies import router as router_Vocabulary
 from app.api.routes.rt_verbs import router as router_Verb
 from app.api.routes.rt_synonyms import router as router_Synonym
+from app.api.routes.rt_sayings import router as router_Saying
 from app.models import *
 
 app = FastAPI(title=settings.app_name)
@@ -28,6 +29,7 @@ app.include_router(router_Page, prefix="/router/rt_pages", tags=["page"])
 app.include_router(router_Vocabulary, prefix="/router/rt_vocabularies", tags=["vocabularies"])
 app.include_router(router_Verb, prefix="/router/rt_verbs", tags=["verbs"])
 app.include_router(router_Synonym, prefix="/router/rt_synonyms", tags=["synonyms"])
+app.include_router(router_Saying, prefix="/router/rt/sayings", tags=["sayings"])
 
 
 @app.get("/")

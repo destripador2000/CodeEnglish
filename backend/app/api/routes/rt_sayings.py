@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
+from typing import List
+from sqlalchemy.future import select
 
 from app.core.database import get_db
 from app.models.md_Sayings import Saying as tbl_Saying
@@ -31,3 +33,21 @@ async def create_synonym(saying: SayingCreate,
         await conex.rollback()
         print(f"Error: {ex}")
         raise HTTPException(status_code=400, detail="Error al registrar")
+
+
+# API para obtener synonym
+@router.get("/saying,{pages_id}", response_model=List[SayingResponse])
+async def get_saying(pages_id: int, conex: AsyncSession = Depends(get_db)):
+    try:
+        stmt = select(tbl_Saying).where(tbl_Saying.pages_id == pages_id)
+        result = await conex.execute(stmt)
+        saying = result.scalars().all()
+
+        if not saying:
+            raise HTTPException(status_code=400, detail="Saying no encontrados")
+
+        return saying
+
+    except Exception as ex:
+        print(f"Error: {ex}")
+        raise HTTPException(status_code=500, detail="Problemas con la petición")

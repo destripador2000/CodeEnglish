@@ -9,8 +9,8 @@ class IdiomResponse(BaseModel):
     meaning: str
     example: str
 
-    model_dump = {
-        "from_attribute": True
+    model_config = {
+        "from_attributes": True
     }
 
 

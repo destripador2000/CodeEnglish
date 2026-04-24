@@ -5,6 +5,7 @@ class Settings(BaseSettings):
     app_name: str
     admin_email: str
     database_url: str
+    database_ram_url: str
     model_config = SettingsConfigDict(env_file=".env")
     secret_key: str
     algorithm: str

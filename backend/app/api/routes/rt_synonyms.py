@@ -6,7 +6,7 @@ from typing import List
 
 from app.core.database import get_db
 from app.models.md_Synonyms import Synonym as tbl_Synonym
-from app.schemas.sch_synonym import SynonymResponse, SynonymCreate
+from app.schemas.sch_synonym import SynonymResponse, SynonymCreate, SynonymUpdate
 
 
 router = APIRouter()
@@ -51,3 +51,31 @@ async def get_synonym(pages_id: int, conex: AsyncSession = Depends(get_db)):
     except Exception as ex:
         print(f"Error: {ex}")
         raise HTTPException(status_code=500, detail="Problemas con la peticións")
+
+
+# API para actualizar synonym
+@router.patch("/update_synonym/{id}")
+async def update_synonym(id: int, synonym: SynonymUpdate,
+                        conex: AsyncSession = Depends(get_db)):
+    try:
+        stmt = select(tbl_Synonym).where(tbl_Synonym.id == id)
+        result = await conex.execute(stmt)
+        upt_synonym = result.scalars().first()
+
+        if not upt_synonym:
+            raise HTTPException(status_code=400, detail="Synonym no encontrado")
+
+        upt_data = synonym.model_dump(exclude_unset=True)
+
+        for key, value in upt_data.items():
+            setattr(upt_synonym, key, value)
+
+        await conex.commit()
+        await conex.refresh(upt_synonym)
+
+        return upt_synonym
+
+    except Exception as ex:
+        await conex.rollback()
+        print(f"Error: {ex}")
+        raise HTTPException(status_code=500, detail="Problemas en la petición")

@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 # Esquema de respuesta
@@ -18,3 +19,14 @@ class PageCreate(BaseModel):
     page_number: int
     module_type: str
     subtitle: str
+
+
+# Esquema para actualizar
+class PageUpdate(BaseModel):
+    page_number: Optional[int] = None
+    module_type: Optional[str] = None
+    subtitle: Optional[str] = None
+
+    model_config = {
+       "from_attributes": True
+    }

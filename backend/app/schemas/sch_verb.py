@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 # Esquema para Response
@@ -26,3 +27,18 @@ class VerbCreate(BaseModel):
     simple_past: str
     present_part: str
     past_part: str
+
+
+# Esquema para actualizar
+class VerbUpdate(BaseModel):
+    page_id: Optional[int] = None
+    base_form: Optional[str] = None
+    meaning: Optional[str] = None
+    present: Optional[str] = None
+    simple_past: Optional[str] = None
+    present_part: Optional[str] = None
+    past_part: Optional[str] = None
+
+    model_config = {
+       "from_attributes": True
+    }

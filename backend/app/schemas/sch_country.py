@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 # Esquema para response
@@ -20,3 +21,15 @@ class CountryCreate(BaseModel):
     country: str
     adjective: str
     person: str
+
+
+# Esquema para actualizar
+class CountryUpdate(BaseModel):
+    pages_iD: Optional[int] = None
+    country: Optional[str] = None
+    adjective: Optional[str] = None
+    person: Optional[str] = None
+
+    model_config = {
+        "from_attributes": True
+    }

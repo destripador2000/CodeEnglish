@@ -6,7 +6,7 @@ from sqlalchemy.future import select
 
 from app.core.database import get_db
 from app.models.md_Sayings import Saying as tbl_Saying
-from app.schemas.sch_saying import SayingResponse, SayingCreate
+from app.schemas.sch_saying import SayingResponse, SayingCreate, SayingUpdate
 
 
 router = APIRouter()
@@ -51,3 +51,31 @@ async def get_saying(pages_id: int, conex: AsyncSession = Depends(get_db)):
     except Exception as ex:
         print(f"Error: {ex}")
         raise HTTPException(status_code=500, detail="Problemas con la petición")
+
+
+# API para actualizar saying
+@router.patch("/update_saying/{id}")
+async def update_saying(id: int, saying: SayingUpdate,
+                       conex: AsyncSession = Depends(get_db)):
+    try:
+        stmt = select(tbl_Saying).where(tbl_Saying.id == id)
+        result = await conex.execute(stmt)
+        upt_saying = result.scalars().first()
+
+        if not upt_saying:
+            raise HTTPException(status_code=400, detail="Saying no encontrado")
+
+        upt_data = saying.model_dump(exclude_unset=True)
+
+        for key, value in upt_data.items():
+            setattr(upt_saying, key, value)
+
+        await conex.commit()
+        await conex.refresh(upt_saying)
+
+        return upt_saying
+
+    except Exception as ex:
+        await conex.rollback()
+        print(f"Error: {ex}")
+        raise HTTPException(status_code=500, detail="Problemas en la petición")

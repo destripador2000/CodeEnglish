@@ -5,7 +5,7 @@ from typing import List
 
 from app.core.database import get_db
 from app.models.md_Verbs import Verb as tbl_Verb
-from app.schemas.sch_verb import VerbResponse, VerbCreate
+from app.schemas.sch_verb import VerbResponse, VerbCreate, VerbUpdate
 from sqlalchemy.future import select
 
 
@@ -51,3 +51,31 @@ async def get_verb(page_id: int, conex: AsyncSession = Depends(get_db)):
     except Exception as ex:
         print(f"Error: {ex}")
         raise HTTPException(status_code=500, detail="Error en la petición")
+
+
+# API para actualizar verbo
+@router.patch("/update_verb/{id}")
+async def update_verb(id: int, verb: VerbUpdate,
+                     conex: AsyncSession = Depends(get_db)):
+    try:
+        stmt = select(tbl_Verb).where(tbl_Verb.id == id)
+        result = await conex.execute(stmt)
+        upt_verb = result.scalars().first()
+
+        if not upt_verb:
+            raise HTTPException(status_code=400, detail="Verbo no encontrado")
+
+        upt_data = verb.model_dump(exclude_unset=True)
+
+        for key, value in upt_data.items():
+            setattr(upt_verb, key, value)
+
+        await conex.commit()
+        await conex.refresh(upt_verb)
+
+        return upt_verb
+
+    except Exception as ex:
+        await conex.rollback()
+        print(f"Error: {ex}")
+        raise HTTPException(status_code=500, detail="Problemas en la petición")

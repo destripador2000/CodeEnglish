@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from typing import List
 
 from app.core.database import get_db
 from app.models.md_Pages import Page as tblPage
@@ -25,6 +26,24 @@ async def create_page(page: PageCreate,
         await conex.rollback()
         print(f"Error:{ex}")
         raise HTTPException(status_code=400, detail="Error al registrar")
+
+
+# API para obtener páginas
+@router.get("/pages/{module_type}", response_model=List[PageResponse])
+async def get_pages(module_type: str, conex: AsyncSession = Depends(get_db)):
+    try:
+        stmt = select(tblPage).where(tblPage.module_type == module_type)
+        result = await conex.execute(stmt)
+        pages = result.scalars().all()
+
+        if not pages:
+            raise HTTPException(status_code=400, detail="Páginas no encontradas")
+
+        return pages
+
+    except Exception as ex:
+        print(f"Error: {ex}")
+        raise HTTPException(status_code=500, detail="Problemas con la petición")
 
 
 # API para actualizar página

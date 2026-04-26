@@ -6,7 +6,7 @@ from typing import List
 
 from app.core.database import get_db
 from app.models.md_Vocabulary import Vocabulary as tbl_Vocabulary
-from app.schemas.sch_vocabulary import VocabularyResponse, VocabularyCreate
+from app.schemas.sch_vocabulary import VocabularyResponse, VocabularyCreate, VocabularyUpdate
 
 router = APIRouter()
 
@@ -48,5 +48,33 @@ async def get_vocabulary(pages_id: int, conex: AsyncSession = Depends(get_db)):
         return vocabularies
 
     except Exception as ex:
+        print(f"Error: {ex}")
+        raise HTTPException(status_code=500, detail="Problemas en la petición")
+
+
+# API para actualizar vocabulario
+@router.patch("/update_vocabulary/{id}")
+async def update_vocabulary(id: int, vocabulary: VocabularyUpdate,
+                            conex: AsyncSession = Depends(get_db)):
+    try:
+        stmt = select(tbl_Vocabulary).where(tbl_Vocabulary.id == id)
+        result = await conex.execute(stmt)
+        upt_vocabulary = result.scalars().first()
+
+        if not upt_vocabulary:
+            raise HTTPException(status_code=400, details="Vocabulario no encontrado")
+
+        upt_data = vocabulary.model_dump(exclude_unset=True)
+
+        for key, value in upt_data.items():
+            setattr(upt_vocabulary, key, value)
+
+        await conex.commit()
+        await conex.refresh(upt_vocabulary)
+
+        return upt_vocabulary
+
+    except Exception as ex:
+        await conex.rollback()
         print(f"Error: {ex}")
         raise HTTPException(status_code=500, detail="Problemas en la petición")

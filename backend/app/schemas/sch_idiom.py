@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 # Esquema para response
@@ -20,3 +21,15 @@ class IdiomCreate(BaseModel):
     phrase: str
     meaning: str
     example: str
+
+
+# Esquema para actualizar
+class IdiomUpdate(BaseModel):
+    pages_id: Optional[int] = None
+    phrase: Optional[str] = None
+    meaning: Optional[str] = None
+    example: Optional[str] = None
+
+    model_config = {
+        "from_attributes": True
+    }

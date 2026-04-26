@@ -6,7 +6,7 @@ from sqlalchemy.future import select
 
 from app.core.database import get_db
 from app.models.md_Countries import Country as tbl_Country
-from app.schemas.sch_country import CountryCreate, CountryResponse
+from app.schemas.sch_country import CountryCreate, CountryResponse, CountryUpdate
 
 
 router = APIRouter()
@@ -51,3 +51,31 @@ async def get_idiom(pages_iD: int, conex: AsyncSession = Depends(get_db)):
     except Exception as ex:
         print(f"Error: {ex}")
         raise HTTPException(status_code=500, detail="Problemas con la petición")
+
+
+# API para actualizar country
+@router.patch("/update_country/{id}")
+async def update_country(id: int, country: CountryUpdate,
+                        conex: AsyncSession = Depends(get_db)):
+    try:
+        stmt = select(tbl_Country).where(tbl_Country.id == id)
+        result = await conex.execute(stmt)
+        upt_country = result.scalars().first()
+
+        if not upt_country:
+            raise HTTPException(status_code=400, detail="Country no encontrado")
+
+        upt_data = country.model_dump(exclude_unset=True)
+
+        for key, value in upt_data.items():
+            setattr(upt_country, key, value)
+
+        await conex.commit()
+        await conex.refresh(upt_country)
+
+        return upt_country
+
+    except Exception as ex:
+        await conex.rollback()
+        print(f"Error: {ex}")
+        raise HTTPException(status_code=500, detail="Problemas en la petición")

@@ -59,3 +59,26 @@ def test_get_vocabulary_vacio_devuelve_400(client):
 
     assert response.status_code == 400
     assert response.json()["detail"] == "Verbos no encontrados"
+
+
+# Función test para PATCH (Éxitoso)
+def test_update_vocabulary_exitoso(client):
+
+    payload_crear = {
+        "pages_id": 1,
+        "word": "Bug",
+        "meaning": "Bicho"
+    }
+    response_post = client.post("/router/rt_vocabularies/create_vocabulary", json=payload_crear)
+    id_creado = response_post.json()["id"]
+
+    payload_patch = {
+        "meaning": "Error de software"
+    }
+    response_patch = client.patch(f"/router/rt_vocabularies/update_vocabulary/{id_creado}", json=payload_patch)
+
+    assert response_patch.status_code == 200
+    data = response_patch.json()
+
+    assert data["meaning"] == "Error de software"
+    assert data["word"] == "Bug"

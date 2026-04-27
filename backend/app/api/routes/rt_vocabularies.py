@@ -93,10 +93,15 @@ async def delete_vocabulary(id: int, conex: AsyncSession = Depends(get_db)):
         result = await conex.execute(stmt)
         del_vocabulary = result.scalars().first()
 
-        if not del_vocabulary:
-            raise HTTPException(status_code=404, detail="Vocabulario no encontrado")
+    except Exception as ex:
+        print(f"Error al buscar: {ex}")
+        raise HTTPException(status_code=500, detail="Problemas en la petición")
 
-        conex.delete(del_vocabulary)
+    if not del_vocabulary:
+        raise HTTPException(status_code=404, detail="Vocabulario no encontrado")
+
+    try:
+        await conex.delete(del_vocabulary)
         await conex.commit()
 
         return {"mensaje": "Vocabulario eliminado correctamente"}

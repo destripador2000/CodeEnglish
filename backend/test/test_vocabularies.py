@@ -113,3 +113,13 @@ def test_delete_vocabulary_exitoso(client):
 
     response_verificar = client.get("/router/rt_vocabularies/vocabulary/1")
     assert response_verificar.status_code == 400
+
+
+# Función test para ENDPOINT DELETE (fallido)
+def test_delete_vocabulary_no_encontrado(client):
+    # Intentamos borrar un ID que sabemos que no existe
+    response = client.delete("/router/rt_vocabularies/delete_vocabulary/999")
+
+    # Validamos que devuelva 404 (y no 500)
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Vocabulario no encontrado"

@@ -79,3 +79,26 @@ async def update_country(id: int, country: CountryUpdate,
         await conex.rollback()
         print(f"Error: {ex}")
         raise HTTPException(status_code=500, detail="Problemas en la petición")
+
+
+# API para eliminar country
+@router.delete("/delete_country/{id}")
+async def delete_country(id: int, conex: AsyncSession = Depends(get_db)):
+
+    try:
+        stmt = select(tbl_Country).where(tbl_Country.id == id)
+        result = await conex.execute(stmt)
+        del_country = result.scalars().first()
+
+        if not del_country:
+            raise HTTPException(status_code=404, detail="Country no encontrado")
+
+        conex.delete(del_country)
+        await conex.commit()
+
+        return {"mensaje": "Country eliminado correctamente"}
+
+    except Exception as ex:
+        await conex.rollback()
+        print(f"Error: {ex}")
+        raise HTTPException(status_code=500, detail="Problemas en la petición")

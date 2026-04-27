@@ -61,9 +61,14 @@ async def update_vocabulary(id: int, vocabulary: VocabularyUpdate,
         result = await conex.execute(stmt)
         upt_vocabulary = result.scalars().first()
 
-        if not upt_vocabulary:
-            raise HTTPException(status_code=400, details="Vocabulario no encontrado")
+    except Exception as ex:
+        print(f"Error de lectura: {ex}")
+        raise HTTPException(status_code=500, detail="Problemas en la petición")
 
+    if not upt_vocabulary:
+        raise HTTPException(status_code=400, detail="Vocabulario no encontrado")
+
+    try:
         upt_data = vocabulary.model_dump(exclude_unset=True)
 
         for key, value in upt_data.items():
@@ -71,7 +76,6 @@ async def update_vocabulary(id: int, vocabulary: VocabularyUpdate,
 
         await conex.commit()
         await conex.refresh(upt_vocabulary)
-
         return upt_vocabulary
 
     except Exception as ex:

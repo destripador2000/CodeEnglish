@@ -30,7 +30,7 @@ def test_create_vocabulary_datos_incompletos(client):
     assert "detail" in data
 
 
-# Función para test GET (Éxitoso)
+# Función test para GET (Éxitoso)
 def test_get_vocabulary_exitoso(client):
 
     id_pagina_prueba = 5
@@ -50,3 +50,12 @@ def test_get_vocabulary_exitoso(client):
     assert len(data) == 1
     assert data[0]["word"] == "Testing"
     assert data[0]["pages_id"] == 5
+
+
+# Función test para GET (Fallido)
+def test_get_vocabulary_vacio_devuelve_400(client):
+
+    response = client.get("/router/rt_vocabularies/vocabulary/99")
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Verbos no encontrados"

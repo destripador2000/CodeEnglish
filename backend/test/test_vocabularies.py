@@ -93,3 +93,23 @@ def test_update_vocabulary_no_encontrado(client):
 
     assert response.status_code == 400
     assert response.json()["detail"] == "Vocabulario no encontrado"
+
+
+# Función test para ENDPOINT DELETE (éxitoso)
+def test_delete_vocabulary_exitoso(client):
+
+    payload_crear = {
+        "pages_id": 1,
+        "word": "DeleteMe",
+        "meaning": "Bórrame"
+    }
+    response_post = client.post("/router/rt_vocabularies/create_vocabulary", json=payload_crear)
+    id_creado = response_post.json()["id"]
+
+    response_delete = client.delete(f"/router/rt_vocabularies/delete_vocabulary/{id_creado}")
+
+    assert response_delete.status_code == 200
+    assert response_delete.json()["mensaje"] == "Vocabulario eliminado correctamente"
+
+    response_verificar = client.get("/router/rt_vocabularies/vocabulary/1")
+    assert response_verificar.status_code == 400

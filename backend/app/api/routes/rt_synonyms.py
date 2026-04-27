@@ -79,3 +79,26 @@ async def update_synonym(id: int, synonym: SynonymUpdate,
         await conex.rollback()
         print(f"Error: {ex}")
         raise HTTPException(status_code=500, detail="Problemas en la petición")
+
+
+# API para eliminar synonym
+@router.delete("/delete_synonym/{id}")
+async def delete_synonym(id: int, conex: AsyncSession = Depends(get_db)):
+
+    try:
+        stmt = select(tbl_Synonym).where(tbl_Synonym.id == id)
+        result = await conex.execute(stmt)
+        del_synonym = result.scalars().first()
+
+        if not del_synonym:
+            raise HTTPException(status_code=404, detail="Synonym no encontrado")
+
+        conex.delete(del_synonym)
+        await conex.commit()
+
+        return {"mensaje": "Synonym eliminado correctamente"}
+
+    except Exception as ex:
+        await conex.rollback()
+        print(f"Error: {ex}")
+        raise HTTPException(status_code=500, detail="Problemas en la petición")

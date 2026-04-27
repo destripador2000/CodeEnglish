@@ -79,3 +79,26 @@ async def update_saying(id: int, saying: SayingUpdate,
         await conex.rollback()
         print(f"Error: {ex}")
         raise HTTPException(status_code=500, detail="Problemas en la petición")
+
+
+# API para eliminar saying
+@router.delete("/delete_saying/{id}")
+async def delete_saying(id: int, conex: AsyncSession = Depends(get_db)):
+
+    try:
+        stmt = select(tbl_Saying).where(tbl_Saying.id == id)
+        result = await conex.execute(stmt)
+        del_saying = result.scalars().first()
+
+        if not del_saying:
+            raise HTTPException(status_code=404, detail="Saying no encontrado")
+
+        conex.delete(del_saying)
+        await conex.commit()
+
+        return {"mensaje": "Saying eliminado correctamente"}
+
+    except Exception as ex:
+        await conex.rollback()
+        print(f"Error: {ex}")
+        raise HTTPException(status_code=500, detail="Problemas en la petición")

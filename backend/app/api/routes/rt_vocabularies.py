@@ -78,3 +78,26 @@ async def update_vocabulary(id: int, vocabulary: VocabularyUpdate,
         await conex.rollback()
         print(f"Error: {ex}")
         raise HTTPException(status_code=500, detail="Problemas en la petición")
+
+
+# API para eliminar vocabulario
+@router.delete("/delete_vocabulary/{id}")
+async def delete_vocabulary(id: int, conex: AsyncSession = Depends(get_db)):
+
+    try:
+        stmt = select(tbl_Vocabulary).where(tbl_Vocabulary.id == id)
+        result = await conex.execute(stmt)
+        del_vocabulary = result.scalars().first()
+
+        if not del_vocabulary:
+            raise HTTPException(status_code=404, detail="Vocabulario no encontrado")
+
+        conex.delete(del_vocabulary)
+        await conex.commit()
+
+        return {"mensaje": "Vocabulario eliminado correctamente"}
+
+    except Exception as ex:
+        await conex.rollback()
+        print(f"Error: {ex}")
+        raise HTTPException(status_code=500, detail="Problemas en la petición")

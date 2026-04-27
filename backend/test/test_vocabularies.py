@@ -82,3 +82,14 @@ def test_update_vocabulary_exitoso(client):
 
     assert data["meaning"] == "Error de software"
     assert data["word"] == "Bug"
+
+
+# Función test para ENPOINT PATCH (Fallido)
+def test_update_vocabulary_no_encontrado(client):
+
+    payload_patch = {"word": "Fantasma"}
+
+    response = client.patch("/router/rt_vocabularies/update_vocabulary/999", json=payload_patch)
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Vocabulario no encontrado"

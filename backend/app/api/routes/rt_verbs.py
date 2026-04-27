@@ -44,7 +44,7 @@ async def get_verb(page_id: int, conex: AsyncSession = Depends(get_db)):
         verbs = result.scalars().all()
 
         if not verbs:
-            raise HTTPException(status_code=400, detail="Verbos no encontrados")
+            raise HTTPException(status_code=404, detail="Verbos no encontrados")
 
         return verbs
 
@@ -56,14 +56,14 @@ async def get_verb(page_id: int, conex: AsyncSession = Depends(get_db)):
 # API para actualizar verbo
 @router.patch("/update_verb/{id}")
 async def update_verb(id: int, verb: VerbUpdate,
-                     conex: AsyncSession = Depends(get_db)):
+                      conex: AsyncSession = Depends(get_db)):
     try:
         stmt = select(tbl_Verb).where(tbl_Verb.id == id)
         result = await conex.execute(stmt)
         upt_verb = result.scalars().first()
 
         if not upt_verb:
-            raise HTTPException(status_code=400, detail="Verbo no encontrado")
+            raise HTTPException(status_code=404, detail="Verbo no encontrado")
 
         upt_data = verb.model_dump(exclude_unset=True)
 
@@ -74,6 +74,29 @@ async def update_verb(id: int, verb: VerbUpdate,
         await conex.refresh(upt_verb)
 
         return upt_verb
+
+    except Exception as ex:
+        await conex.rollback()
+        print(f"Error: {ex}")
+        raise HTTPException(status_code=500, detail="Problemas en la petición")
+
+
+# API para eliminar verbo
+@router.delete("/delete_verb/{id}")
+async def delete_verb(id: int, conex: AsyncSession = Depends(get_db)):
+
+    try:
+        stmt = select(tbl_Verb).where(tbl_Verb.id == id)
+        result = await conex.execute(stmt)
+        del_verb = result.scalars().first()
+
+        if not del_verb:
+            raise HTTPException(status_code=404, detail="Verbo no encontrado")
+
+        conex.delete(del_verb)
+        await conex.commit()
+
+        return {"mensaje": "Verbo eliminado correctamente"}
 
     except Exception as ex:
         await conex.rollback()

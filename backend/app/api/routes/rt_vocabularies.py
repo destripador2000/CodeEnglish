@@ -42,14 +42,14 @@ async def get_vocabulary(pages_id: int, conex: AsyncSession = Depends(get_db)):
         result = await conex.execute(stmt)
         vocabularies = result.scalars().all()
 
-        if not vocabularies:
-            raise HTTPException(status_code=400, detail="Verbos no encontrados")
-
-        return vocabularies
-
     except Exception as ex:
-        print(f"Error: {ex}")
+        print(f"Error de base de datos: {ex}")
         raise HTTPException(status_code=500, detail="Problemas en la petición")
+
+    if not vocabularies:
+        raise HTTPException(status_code=400, detail="Verbos no encontrados")
+
+    return vocabularies
 
 
 # API para actualizar vocabulario

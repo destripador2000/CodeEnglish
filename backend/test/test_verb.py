@@ -55,3 +55,30 @@ def test_get_verb_succes(client):
     assert len(data) == 1
     assert data[0]["base_form"] == "Buy"
     assert data[0]["page_id"] == 5
+
+# Función test para actualizar verbo (Éxitoso)
+def test_update_verb_success(client):
+    payload = {
+        "page_id": 1,
+        "base_form": "Buy",
+        "meaning": "Comprar",
+        "present": "Buys",
+        "simple_past": "Bought",
+        "present_part": "Buying",
+        "past_part": "Bought"
+    }
+    
+    response =  client.post("/router/rt_verbs/create_verb", json=payload)
+    id_create = response.json()["id"]
+
+    payload_patch = {
+        "base_form": "Purchase"
+    }
+
+    response_patch = client.patch(f"/router/rt_verbs/update_verb/{id_create}", json=payload_patch)
+
+    assert response_patch.status_code == 200
+    data = response_patch.json()
+
+    assert data["base_form"] == "Purchase"
+    assert data["meaning"] == "Comprar"

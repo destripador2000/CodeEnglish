@@ -1,5 +1,5 @@
 # Función test para crear un verbo (Éxitoso)
-def test_create_ver(client):
+def test_create_verb(client):
     payload = {
         "page_id": 1,
         "base_form": "Buy",
@@ -58,6 +58,15 @@ def test_get_verb_succes(client):
     assert data[0]["page_id"] == 5
 
 
+# Función test de ENPOINT GET (fallido)
+def test_get_verb_fail(client):
+
+    response = client.get("/router/rt_verbs/verbs/99")
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Verbos no encontrados"
+
+
 # Función test para actualizar verbo (Éxitoso)
 def test_update_verb_success(client):
     payload = {
@@ -70,7 +79,7 @@ def test_update_verb_success(client):
         "past_part": "Bought"
     }
 
-    response =  client.post("/router/rt_verbs/create_verb", json=payload)
+    response = client.post("/router/rt_verbs/create_verb", json=payload)
     id_create = response.json()["id"]
 
     payload_patch = {

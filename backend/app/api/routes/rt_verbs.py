@@ -62,9 +62,14 @@ async def update_verb(id: int, verb: VerbUpdate,
         result = await conex.execute(stmt)
         upt_verb = result.scalars().first()
 
-        if not upt_verb:
-            raise HTTPException(status_code=404, detail="Verbo no encontrado")
+    except Exception as ex:
+        print(f"Error de lectura: {ex}")
+        raise HTTPException(status_code=500, detail="Problemas con la petición")
 
+    if not upt_verb:
+        raise HTTPException(status_code=404, detail="Verbo no encontrado")
+
+    try:
         upt_data = verb.model_dump(exclude_unset=True)
 
         for key, value in upt_data.items():

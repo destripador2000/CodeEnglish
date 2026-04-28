@@ -61,3 +61,27 @@ def test_get_idiom_fail(client):
     
     assert response.status_code == 400
     assert response.json()["detail"] == "Idiom no encontrado"
+
+
+# Función test para ENDPOINT PATCH (Éxitoso)
+def test_patch_idiom_succes(client):
+    payload = {
+        "pages_id": 1,
+        "phrase": "(To) Know someone by sight",
+        "meaning": "Conocer de vista",
+        "example": "I know him by sight"
+    }
+
+    post = client.post("/router/rt_idioms/create_idiom", json=payload)
+    id_created = post.json()["id"]
+
+    payload_patch = {
+        "example": "I know her by sight"
+    }
+
+    patch = client.patch(f"/router/rt_idioms/update_idiom/{id_created}", json=payload_patch)
+
+    assert patch.status_code == 200
+    data =  patch.json()
+    assert data["example"] == "I know her by sight"
+    assert data["phrase"] == "(To) Know someone by sight"

@@ -95,10 +95,15 @@ async def delete_verb(id: int, conex: AsyncSession = Depends(get_db)):
         result = await conex.execute(stmt)
         del_verb = result.scalars().first()
 
-        if not del_verb:
-            raise HTTPException(status_code=404, detail="Verbo no encontrado")
+    except Exception as ex:
+        print(f"Error: {ex}")
+        raise HTTPException(status_code=500, detail="Problemas en la petición")
 
-        conex.delete(del_verb)
+    if not del_verb:
+        raise HTTPException(status_code=404, detail="Verbo no encontrado")
+
+    try:
+        await conex.delete(del_verb)
         await conex.commit()
 
         return {"mensaje": "Verbo eliminado correctamente"}

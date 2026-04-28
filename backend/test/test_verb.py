@@ -127,3 +127,11 @@ def test_delete_verb_succes(client):
 
     response_review = client.get("/router/rt_verbs/verbs/1")
     assert response_review.status_code == 400
+
+
+# Función test para ENDPOINT DELETE (fallido)
+def test_delete_verb_fail(client):
+    response = client.delete("/router/rt_verbs/delete_verb/99")
+
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Verbo no encontrado"

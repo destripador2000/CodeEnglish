@@ -30,3 +30,26 @@ def test_create_idiom_fail(client):
     data = response.json()
     assert "detail" in data
     
+
+# Función test de ENDPOINT GET (Éxitoso)
+def test_get_idiom_succes(client):
+
+    id_page_test = 5
+    payload = {
+        "pages_id": id_page_test,
+        "phrase": "(To) Know by sight",
+        "meaning": "Conocer de vista",
+        "example": "I know him by sight"
+    }
+
+    client.post("/router/rt_idioms/create_idiom", json=payload)
+    response = client.get(f"/router/rt_idioms/idiom/{id_page_test}")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert isinstance(data, list)
+
+    assert len(data) == 1
+    assert data[0]["phrase"] == "(To) Know by sight"
+    assert data[0]["pages_id"] == 5
+

@@ -95,7 +95,7 @@ def test_update_verb_success(client):
     assert data["meaning"] == "Comprar"
 
 
-# Función test para actuzalizar verbo (fallido)
+# Función test para actualizar verbo (fallido)
 def test_update_verb_fail(client):
     payload_patch = {"base_form": "Buy"}
 
@@ -103,3 +103,27 @@ def test_update_verb_fail(client):
 
     assert response.status_code == 404
     assert response.json()["detail"] == "Verbo no encontrado"
+
+
+# Función test para ENDPOINT DELETE (éxitoso)
+def test_delete_verb_succes(client):
+
+    payload_post = {
+        "page_id": 1,
+        "base_form": "Buy",
+        "meaning": "Comprar",
+        "present": "Buys",
+        "simple_past": "Bought",
+        "present_part": "Buying",
+        "past_part": "Bought"
+    }
+    response_post = client.post("/router/rt_verbs/create_verb", json=payload_post)
+    id_created = response_post.json()["id"]
+
+    response_delete = client.delete(f"/router/rt_verbs/delete_verb/{id_created}")
+
+    assert response_delete.status_code == 200
+    assert response_delete.json()["mensaje"] == "Verbo eliminado correctamente"
+
+    response_review = client.get("/router/rt_verbs/verbs/1")
+    assert response_review.status_code == 400

@@ -56,15 +56,20 @@ async def get_idiom(pages_id: int, conex: AsyncSession = Depends(get_db)):
 # API para actualizar idiom
 @router.patch("/update_idiom/{id}")
 async def update_idiom(id: int, idiom: IdiomUpdate,
-                      conex: AsyncSession = Depends(get_db)):
+                        conex: AsyncSession = Depends(get_db)):
     try:
         stmt = select(tbl_Idiom).where(tbl_Idiom.id == id)
         result = await conex.execute(stmt)
         upt_idiom = result.scalars().first()
 
-        if not upt_idiom:
-            raise HTTPException(status_code=400, detail="Idiom no encontrado")
+    except Exception as ex:
+        print(f"Error: {ex}")
+        raise HTTPException(status_code=500, detail="Problemas en la petición")
+    
+    if not upt_idiom:
+        raise HTTPException(status_code=400, detail="Idiom no encontrado")
 
+    try:
         upt_data = idiom.model_dump(exclude_unset=True)
 
         for key, value in upt_data.items():
@@ -72,7 +77,6 @@ async def update_idiom(id: int, idiom: IdiomUpdate,
 
         await conex.commit()
         await conex.refresh(upt_idiom)
-
         return upt_idiom
 
     except Exception as ex:

@@ -97,3 +97,22 @@ def test_patch_idiom_fail(client):
     response = client.patch("/router/rt_idioms/update_idiom/99", json=payload_patch)
     assert response.status_code == 400
     assert response.json()["detail"] == "Idiom no encontrado"
+
+
+# Función test para ENDPOINT DELETE (Éxitoso)
+def test_delete_idiom_success(client):
+    payload = {
+        "pages_id": 1,
+        "phrase": "(To) Know someone by sight",
+        "meaning": "Conocer de vista",
+        "example": "I know him by sight"
+    }
+    post = client.post("/router/rt_idioms/create_idiom", json=payload)
+    id_created = post.json()["id"]
+
+    delete = client.delete(f"/router/rt_idioms/delete_idiom/{id_created}")
+
+    assert delete.status_code == 200
+    assert delete.json()["mensaje"] == "Idiom eliminado correctamente"
+    review = client.get(f"/router/rt_idioms/idiom/1")
+    assert review.status_code == 400

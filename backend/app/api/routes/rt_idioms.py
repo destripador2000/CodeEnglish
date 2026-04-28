@@ -94,10 +94,16 @@ async def delete_idiom(id: int, conex: AsyncSession = Depends(get_db)):
         result = await conex.execute(stmt)
         del_idiom = result.scalars().first()
 
-        if not del_idiom:
-            raise HTTPException(status_code=404, detail="Idiom no encontrado")
+    except Exception as ex:
+        await conex.rollback()
+        print(f"Error: {ex}")
+        raise HTTPException(status_code=500, detail="Problemas en la petición")
 
-        conex.delete(del_idiom)
+    if not del_idiom:
+        raise HTTPException(status_code=404, detail="Idiom no encontrado")
+
+    try:
+        await conex.delete(del_idiom)
         await conex.commit()
 
         return {"mensaje": "Idiom eliminado correctamente"}

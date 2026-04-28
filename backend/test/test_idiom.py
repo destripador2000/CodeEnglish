@@ -53,3 +53,11 @@ def test_get_idiom_succes(client):
     assert data[0]["phrase"] == "(To) Know by sight"
     assert data[0]["pages_id"] == 5
 
+
+# Función test para ENDPOINT GET (fallido)
+def test_get_idiom_fail(client):
+
+    response = client.get(f"/router/rt_idioms/idiom/99")
+    
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Idiom no encontrado"

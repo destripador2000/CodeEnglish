@@ -116,3 +116,10 @@ def test_delete_idiom_success(client):
     assert delete.json()["mensaje"] == "Idiom eliminado correctamente"
     review = client.get(f"/router/rt_idioms/idiom/1")
     assert review.status_code == 400
+
+
+# Función test para ENDPOINT DELETE (Fallido)
+def test_delete_idiom_fail(client):
+    response = delete = client.delete(f"/router/rt_idioms/delete_idiom/99")
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Idiom no encontrado"

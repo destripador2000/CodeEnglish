@@ -18,6 +18,7 @@ def test_create_ver(client):
     assert data["base_form"] == "Buy"
     assert "id" in data
 
+
 # Función test de crear verbo (Fallido)
 def test_create_verb_datos_incompletos(client):
     payload = {
@@ -56,6 +57,7 @@ def test_get_verb_succes(client):
     assert data[0]["base_form"] == "Buy"
     assert data[0]["page_id"] == 5
 
+
 # Función test para actualizar verbo (Éxitoso)
 def test_update_verb_success(client):
     payload = {
@@ -67,7 +69,7 @@ def test_update_verb_success(client):
         "present_part": "Buying",
         "past_part": "Bought"
     }
-    
+
     response =  client.post("/router/rt_verbs/create_verb", json=payload)
     id_create = response.json()["id"]
 
@@ -82,3 +84,13 @@ def test_update_verb_success(client):
 
     assert data["base_form"] == "Purchase"
     assert data["meaning"] == "Comprar"
+
+
+# Función test para actuzalizar verbo (fallido)
+def test_update_verb_fail(client):
+    payload_patch = {"base_form": "Buy"}
+
+    response = client.patch("/router/rt_verbs/update_verb/999", json=payload_patch)
+
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Verbo no encontrado"

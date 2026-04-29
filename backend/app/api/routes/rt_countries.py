@@ -37,9 +37,9 @@ async def create_country(country: CountryCreate,
 
 # API para obtener country
 @router.get("/country/{pages_id}", response_model= List[CountryResponse])
-async def get_idiom(pages_iD: int, conex: AsyncSession = Depends(get_db)):
+async def get_idiom(pages_id: int, conex: AsyncSession = Depends(get_db)):
     try:
-        stmt = select(tbl_Country).where(tbl_Country.pages_iD == pages_iD)
+        stmt = select(tbl_Country).where(tbl_Country.pages_id == pages_id)
         result = await conex.execute(stmt)
         country = result.scalars().all()
 

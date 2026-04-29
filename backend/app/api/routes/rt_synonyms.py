@@ -36,7 +36,7 @@ async def create_synonym(synonym: SynonymCreate,
 
 
 # API para obtener synonym
-@router.get("/synonyms,{pages_id}", response_model=List[SynonymResponse])
+@router.get("/synonyms/{pages_id}", response_model=List[SynonymResponse])
 async def get_synonym(pages_id: int, conex: AsyncSession = Depends(get_db)):
     try:
         stmt = select(tbl_Synonym).where(tbl_Synonym.pages_id == pages_id)

@@ -5,7 +5,7 @@ from typing import Optional
 # Esquema para response
 class CountryResponse(BaseModel):
     id: int
-    pages_iD: int
+    pages_id: int
     country: str
     adjective: str
     person: str
@@ -17,7 +17,7 @@ class CountryResponse(BaseModel):
 
 # Esquema para crear
 class CountryCreate(BaseModel):
-    pages_iD: int
+    pages_id: int
     country: str
     adjective: str
     person: str
@@ -25,7 +25,7 @@ class CountryCreate(BaseModel):
 
 # Esquema para actualizar
 class CountryUpdate(BaseModel):
-    pages_iD: Optional[int] = None
+    pages_id: Optional[int] = None
     country: Optional[str] = None
     adjective: Optional[str] = None
     person: Optional[str] = None

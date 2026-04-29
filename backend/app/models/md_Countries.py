@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 class Country(Base):
     __tablename__ = "countries"
     id: Mapped[int] = mapped_column(primary_key=True)
-    pages_iD: Mapped[int] = mapped_column(ForeignKey("pages.id"))
+    pages_id: Mapped[int] = mapped_column(ForeignKey("pages.id"))
     country: Mapped[str] = mapped_column(String(30), index=True, nullable=False)
     adjective: Mapped[str] = mapped_column(String(30), nullable=False)
     person: Mapped[str] = mapped_column(String(30), nullable=False)

@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     admin_email: str
     database_url: str
     database_ram_url: str
-    model_config = SettingsConfigDict(env_file=".env")
+    model_config = SettingsConfigDict(env_file=".env", extra="forbid")
     secret_key: str
     algorithm: str
     access_token_expire_minutes: int

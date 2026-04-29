@@ -3,7 +3,7 @@ from sqlalchemy import String, ForeignKey
 from typing import TYPE_CHECKING
 from .base import Base
 
-# Verificamos que no hayan relaciones redundantes
+# Comprobamos que no hayan relaciones redundantes
 if TYPE_CHECKING:
     from .md_Pages import Page
 

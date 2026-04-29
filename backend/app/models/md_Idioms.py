@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from .md_Pages import Page
 
 
-# Creamos tabla countries para base de datos
+# Creamos tabla idiom para base de datos
 class Idiom(Base):
     __tablename__ = "idioms"
     id: Mapped[int] = mapped_column(primary_key=True)

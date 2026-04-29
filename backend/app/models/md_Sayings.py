@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from .md_Pages import Page
 
 
-# Creamos tabla countries para base de datos
+# Creamos tabla saying para base de datos
 class Saying(Base):
     __tablename__ = "sayings"
     id: Mapped[int] = mapped_column(primary_key=True)

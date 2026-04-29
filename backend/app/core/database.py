@@ -9,7 +9,8 @@ SQLALCHEMY_DATABASE_URL = settings.database_url
 # Creamos el engine asíncrono
 engine = create_async_engine(
     SQLALCHEMY_DATABASE_URL,
-    echo=True,
+    echo=False,
+    pool_pre_ping=True
 )
 
 # Fábrica de sesiones asíncronas

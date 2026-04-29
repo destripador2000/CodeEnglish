@@ -14,7 +14,7 @@ router = APIRouter()
 
 # API para crear un Saying
 @router.post("/create_saying", response_model=SayingResponse)
-async def create_synonym(saying: SayingCreate,
+async def create_saying(saying: SayingCreate,
                          conex: AsyncSession = Depends(get_db)):
     try:
         saying_new = tbl_Saying(**saying.model_dump())
@@ -35,7 +35,7 @@ async def create_synonym(saying: SayingCreate,
         raise HTTPException(status_code=400, detail="Error al registrar")
 
 
-# API para obtener synonym
+# API para obtener saying
 @router.get("/saying/{pages_id}", response_model=List[SayingResponse])
 async def get_saying(pages_id: int, conex: AsyncSession = Depends(get_db)):
     try:

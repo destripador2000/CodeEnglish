@@ -1,5 +1,5 @@
 # Función test de crear usuario (Éxitoso)
-def test_create_vocabulary(client):
+def test_create_vocabulary_succes(client):
 
     payload = {
         "pages_id": 1,
@@ -17,7 +17,7 @@ def test_create_vocabulary(client):
 
 
 # Función test de crear usuario (Error)
-def test_create_vocabulary_datos_incompletos(client):
+def test_create_vocabulary_fail(client):
 
     payload_incompleto = {
         "word": "Incompleto"
@@ -31,7 +31,7 @@ def test_create_vocabulary_datos_incompletos(client):
 
 
 # Función test para GET (Éxitoso)
-def test_get_vocabulary_exitoso(client):
+def test_get_vocabulary_succes(client):
 
     id_pagina_prueba = 5
     payload = {
@@ -53,16 +53,16 @@ def test_get_vocabulary_exitoso(client):
 
 
 # Función test para GET (Fallido)
-def test_get_vocabulary_vacio_devuelve_400(client):
+def test_get_vocabulary_fail(client):
 
     response = client.get("/router/rt_vocabularies/vocabulary/99")
 
-    assert response.status_code == 400
+    assert response.status_code == 404
     assert response.json()["detail"] == "Verbos no encontrados"
 
 
 # Función test para PATCH (Éxitoso)
-def test_update_vocabulary_exitoso(client):
+def test_update_vocabulary_success(client):
 
     payload_crear = {
         "pages_id": 1,
@@ -85,18 +85,18 @@ def test_update_vocabulary_exitoso(client):
 
 
 # Función test para ENPOINT PATCH (Fallido)
-def test_update_vocabulary_no_encontrado(client):
+def test_update_vocabulary_fail(client):
 
     payload_patch = {"word": "Fantasma"}
 
     response = client.patch("/router/rt_vocabularies/update_vocabulary/999", json=payload_patch)
 
-    assert response.status_code == 400
+    assert response.status_code == 404
     assert response.json()["detail"] == "Vocabulario no encontrado"
 
 
 # Función test para ENDPOINT DELETE (éxitoso)
-def test_delete_vocabulary_exitoso(client):
+def test_delete_vocabulary_success(client):
 
     payload_crear = {
         "pages_id": 1,
@@ -112,14 +112,13 @@ def test_delete_vocabulary_exitoso(client):
     assert response_delete.json()["mensaje"] == "Vocabulario eliminado correctamente"
 
     response_verificar = client.get("/router/rt_vocabularies/vocabulary/1")
-    assert response_verificar.status_code == 400
+    assert response_verificar.status_code == 404
 
 
 # Función test para ENDPOINT DELETE (fallido)
-def test_delete_vocabulary_no_encontrado(client):
-    # Intentamos borrar un ID que sabemos que no existe
+def test_delete_vocabulary_fail(client):
+
     response = client.delete("/router/rt_vocabularies/delete_vocabulary/999")
 
-    # Validamos que devuelva 404 (y no 500)
     assert response.status_code == 404
     assert response.json()["detail"] == "Vocabulario no encontrado"

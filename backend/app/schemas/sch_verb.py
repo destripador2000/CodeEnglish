@@ -33,7 +33,7 @@ class VerbCreate(BaseModel):
 class VerbUpdate(BaseModel):
     page_id: Optional[int] = Field(default=None)
     base_form: Optional[str] = Field(default=None, max_length=30)
-    meaning: Optional[str] = Field(defualt=None, max_length=30)
+    meaning: Optional[str] = Field(default=None, max_length=30)
     present: Optional[str] = Field(default=None, max_length=30)
     simple_past: Optional[str] = Field(default=None, max_length=30)
     present_part: Optional[str] = Field(default=None, max_length=30)

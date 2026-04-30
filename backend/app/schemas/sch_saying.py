@@ -25,7 +25,7 @@ class SayingCreate(BaseModel):
 
 # Esquema para actualizar
 class SayingUpdate(BaseModel):
-    pages_id: Optional[int] = Field(defualt=None)
+    pages_id: Optional[int] = Field(default=None)
     saying: Optional[str] = Field(max_length=45)
     meaning: Optional[str] = Field(max_length=255)
     example: Optional[str] = Field(max_length=255)

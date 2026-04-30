@@ -29,7 +29,7 @@ def test_create_idiom_fail(client):
     assert response.status_code == 422
     data = response.json()
     assert "detail" in data
-    
+
 
 # Función test de ENDPOINT GET (Éxitoso)
 def test_get_idiom_succes(client):
@@ -57,9 +57,9 @@ def test_get_idiom_succes(client):
 # Función test para ENDPOINT GET (fallido)
 def test_get_idiom_fail(client):
 
-    response = client.get(f"/router/rt_idioms/idiom/99")
-    
-    assert response.status_code == 400
+    response = client.get("/router/rt_idioms/idiom/99")
+
+    assert response.status_code == 404
     assert response.json()["detail"] == "Idiom no encontrado"
 
 
@@ -82,20 +82,20 @@ def test_patch_idiom_succes(client):
     patch = client.patch(f"/router/rt_idioms/update_idiom/{id_created}", json=payload_patch)
 
     assert patch.status_code == 200
-    data =  patch.json()
+    data = patch.json()
     assert data["example"] == "I know her by sight"
     assert data["phrase"] == "(To) Know someone by sight"
 
 
 # Función test para ENDPOINT PATCH (Fallido)
 def test_patch_idiom_fail(client):
-    
+
     payload_patch = {
         "example": "I know her by sight"
     }
 
     response = client.patch("/router/rt_idioms/update_idiom/99", json=payload_patch)
-    assert response.status_code == 400
+    assert response.status_code == 404
     assert response.json()["detail"] == "Idiom no encontrado"
 
 
@@ -114,12 +114,12 @@ def test_delete_idiom_success(client):
 
     assert delete.status_code == 200
     assert delete.json()["mensaje"] == "Idiom eliminado correctamente"
-    review = client.get(f"/router/rt_idioms/idiom/1")
-    assert review.status_code == 400
+    review = client.get("/router/rt_idioms/idiom/1")
+    assert review.status_code == 404
 
 
 # Función test para ENDPOINT DELETE (Fallido)
 def test_delete_idiom_fail(client):
-    response = delete = client.delete(f"/router/rt_idioms/delete_idiom/99")
+    response = client.delete("/router/rt_idioms/delete_idiom/99")
     assert response.status_code == 404
     assert response.json()["detail"] == "Idiom no encontrado"

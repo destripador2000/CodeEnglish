@@ -27,13 +27,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(router_Page, prefix="/router/rt_pages", tags=["page"])
-app.include_router(router_Vocabulary, prefix="/router/rt_vocabularies", tags=["vocabularies"])
-app.include_router(router_Verb, prefix="/router/rt_verbs", tags=["verbs"])
-app.include_router(router_Synonym, prefix="/router/rt_synonyms", tags=["synonyms"])
-app.include_router(router_Saying, prefix="/router/rt_sayings", tags=["sayings"])
-app.include_router(router_Idiom, prefix="/router/rt_idioms", tags=["idioms"])
-app.include_router(router_Country, prefix="/router/rt_countries", tags=["countries"])
+app.include_router(router_Page, prefix="/api/rt_pages", tags=["page"])
+app.include_router(router_Vocabulary, prefix="/api/rt_vocabularies", tags=["vocabularies"])
+app.include_router(router_Verb, prefix="/api/rt_verbs", tags=["verbs"])
+app.include_router(router_Synonym, prefix="/api/rt_synonyms", tags=["synonyms"])
+app.include_router(router_Saying, prefix="/api/rt_sayings", tags=["sayings"])
+app.include_router(router_Idiom, prefix="/api/rt_idioms", tags=["idioms"])
+app.include_router(router_Country, prefix="/api/rt_countries", tags=["countries"])
 
 
 @app.get("/")

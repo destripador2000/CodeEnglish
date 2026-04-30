@@ -20,7 +20,7 @@ def test_create_verb(client):
 
 
 # Función test de crear verbo (Fallido)
-def test_create_verb_datos_incompletos(client):
+def test_create_verb_fail(client):
     payload = {
         "base_form": "Incompleto",
     }
@@ -63,7 +63,7 @@ def test_get_verb_fail(client):
 
     response = client.get("/router/rt_verbs/verbs/99")
 
-    assert response.status_code == 400
+    assert response.status_code == 404
     assert response.json()["detail"] == "Verbos no encontrados"
 
 
@@ -126,7 +126,7 @@ def test_delete_verb_succes(client):
     assert response_delete.json()["mensaje"] == "Verbo eliminado correctamente"
 
     response_review = client.get("/router/rt_verbs/verbs/1")
-    assert response_review.status_code == 400
+    assert response_review.status_code == 404
 
 
 # Función test para ENDPOINT DELETE (fallido)

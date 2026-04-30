@@ -36,7 +36,7 @@ async def create_country(country: CountryCreate,
 
 
 # API para obtener country
-@router.get("/country/{pages_id}", response_model= List[CountryResponse])
+@router.get("/country/{pages_id}", response_model=List[CountryResponse])
 async def get_countries(pages_id: int, conex: AsyncSession = Depends(get_db)):
     try:
         stmt = select(tbl_Country).where(tbl_Country.pages_id == pages_id)
@@ -44,7 +44,7 @@ async def get_countries(pages_id: int, conex: AsyncSession = Depends(get_db)):
         country = result.scalars().all()
 
         if not country:
-            raise HTTPException(status_code=400, detail="Saying no encontrados")
+            raise HTTPException(status_code=404, detail="Country no encontrado")
 
         return country
 
@@ -56,14 +56,14 @@ async def get_countries(pages_id: int, conex: AsyncSession = Depends(get_db)):
 # API para actualizar country
 @router.patch("/update_country/{id}")
 async def update_country(id: int, country: CountryUpdate,
-                        conex: AsyncSession = Depends(get_db)):
+                         conex: AsyncSession = Depends(get_db)):
     try:
         stmt = select(tbl_Country).where(tbl_Country.id == id)
         result = await conex.execute(stmt)
         upt_country = result.scalars().first()
 
         if not upt_country:
-            raise HTTPException(status_code=400, detail="Country no encontrado")
+            raise HTTPException(status_code=404, detail="Country no encontrado")
 
         upt_data = country.model_dump(exclude_unset=True)
 

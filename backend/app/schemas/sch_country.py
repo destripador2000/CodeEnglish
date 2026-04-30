@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 
 
@@ -18,18 +18,14 @@ class CountryResponse(BaseModel):
 # Esquema para crear
 class CountryCreate(BaseModel):
     pages_id: int
-    country: str
-    adjective: str
-    person: str
+    country: str = Field(max_length=30)
+    adjective: str = Field(max_length=30)
+    person: str = Field(max_length=30)
 
 
 # Esquema para actualizar
 class CountryUpdate(BaseModel):
-    pages_id: Optional[int] = None
-    country: Optional[str] = None
-    adjective: Optional[str] = None
-    person: Optional[str] = None
-
-    model_config = {
-        "from_attributes": True
-    }
+    pages_id: Optional[int] = Field(default=None)
+    country: Optional[str] = Field(default=None, max_length=30)
+    adjective: Optional[str] = Field(default=None, max_length=30)
+    person: Optional[str] = Field(default=None, max_length=30)

@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 
 
@@ -17,16 +17,12 @@ class VocabularyResponse(BaseModel):
 # Esquema para crear
 class VocabularyCreate(BaseModel):
     pages_id: int
-    word: str
-    meaning: str
+    word: str = Field(max_length=30)
+    meaning: str = Field(max_length=35)
 
 
 # Esquema para actualizar
 class VocabularyUpdate(BaseModel):
-    pages_id: Optional[int] = None
-    word: Optional[str] = None
-    meaning: Optional[str] = None
-
-    model_config = {
-        "from_attributes": True
-    }
+    pages_id: Optional[int] = Field(default=None)
+    word: Optional[str] = Field(default=None, max_length=30)
+    meaning: Optional[str] = Field(default=None, max_length=35)

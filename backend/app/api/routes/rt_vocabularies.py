@@ -47,7 +47,7 @@ async def get_vocabulary(pages_id: int, conex: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=500, detail="Problemas en la petición")
 
     if not vocabularies:
-        raise HTTPException(status_code=400, detail="Verbos no encontrados")
+        raise HTTPException(status_code=404, detail="Verbos no encontrados")
 
     return vocabularies
 
@@ -66,7 +66,7 @@ async def update_vocabulary(id: int, vocabulary: VocabularyUpdate,
         raise HTTPException(status_code=500, detail="Problemas en la petición")
 
     if not upt_vocabulary:
-        raise HTTPException(status_code=400, detail="Vocabulario no encontrado")
+        raise HTTPException(status_code=404, detail="Vocabulario no encontrado")
 
     try:
         upt_data = vocabulary.model_dump(exclude_unset=True)

@@ -48,7 +48,7 @@ async def get_verb(page_id: int, conex: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=500, detail="Error en la petición")
 
     if not verbs:
-        raise HTTPException(status_code=400, detail="Verbos no encontrados")
+        raise HTTPException(status_code=404, detail="Verbos no encontrados")
 
     return verbs
 

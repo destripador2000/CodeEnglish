@@ -15,7 +15,7 @@ router = APIRouter()
 # API para crear un Saying
 @router.post("/create_saying", response_model=SayingResponse)
 async def create_saying(saying: SayingCreate,
-                         conex: AsyncSession = Depends(get_db)):
+                        conex: AsyncSession = Depends(get_db)):
     try:
         saying_new = tbl_Saying(**saying.model_dump())
 
@@ -44,7 +44,7 @@ async def get_saying(pages_id: int, conex: AsyncSession = Depends(get_db)):
         saying = result.scalars().all()
 
         if not saying:
-            raise HTTPException(status_code=400, detail="Saying no encontrados")
+            raise HTTPException(status_code=404, detail="Saying no encontrados")
 
         return saying
 
@@ -56,14 +56,14 @@ async def get_saying(pages_id: int, conex: AsyncSession = Depends(get_db)):
 # API para actualizar saying
 @router.patch("/update_saying/{id}")
 async def update_saying(id: int, saying: SayingUpdate,
-                       conex: AsyncSession = Depends(get_db)):
+                        conex: AsyncSession = Depends(get_db)):
     try:
         stmt = select(tbl_Saying).where(tbl_Saying.id == id)
         result = await conex.execute(stmt)
         upt_saying = result.scalars().first()
 
         if not upt_saying:
-            raise HTTPException(status_code=400, detail="Saying no encontrado")
+            raise HTTPException(status_code=404, detail="Saying no encontrado")
 
         upt_data = saying.model_dump(exclude_unset=True)
 

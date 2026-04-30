@@ -36,7 +36,7 @@ async def create_idiom(idiom: IdiomCreate,
 
 
 # API para obtener idiom
-@router.get("/idiom/{pages_id}", response_model= List[IdiomResponse])
+@router.get("/idiom/{pages_id}", response_model=List[IdiomResponse])
 async def get_idiom(pages_id: int, conex: AsyncSession = Depends(get_db)):
     try:
         stmt = select(tbl_Idiom).where(tbl_Idiom.pages_id == pages_id)
@@ -46,9 +46,9 @@ async def get_idiom(pages_id: int, conex: AsyncSession = Depends(get_db)):
     except Exception as ex:
         print(f"Error: {ex}")
         raise HTTPException(status_code=500, detail="Problemas con la petición")
-    
+
     if not idiom:
-        raise HTTPException(status_code=400, detail="Idiom no encontrado")
+        raise HTTPException(status_code=404, detail="Idiom no encontrado")
 
     return idiom
 
@@ -56,7 +56,7 @@ async def get_idiom(pages_id: int, conex: AsyncSession = Depends(get_db)):
 # API para actualizar idiom
 @router.patch("/update_idiom/{id}")
 async def update_idiom(id: int, idiom: IdiomUpdate,
-                        conex: AsyncSession = Depends(get_db)):
+                       conex: AsyncSession = Depends(get_db)):
     try:
         stmt = select(tbl_Idiom).where(tbl_Idiom.id == id)
         result = await conex.execute(stmt)
@@ -65,9 +65,9 @@ async def update_idiom(id: int, idiom: IdiomUpdate,
     except Exception as ex:
         print(f"Error: {ex}")
         raise HTTPException(status_code=500, detail="Problemas en la petición")
-    
+
     if not upt_idiom:
-        raise HTTPException(status_code=400, detail="Idiom no encontrado")
+        raise HTTPException(status_code=404, detail="Idiom no encontrado")
 
     try:
         upt_data = idiom.model_dump(exclude_unset=True)

@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 
 
@@ -18,18 +18,14 @@ class IdiomResponse(BaseModel):
 # Esquema para crear
 class IdiomCreate(BaseModel):
     pages_id: int
-    phrase: str
-    meaning: str
-    example: str
+    phrase: str = Field(max_length=30)
+    meaning: str = Field(max_length=255)
+    example: str = Field(max_length=255)
 
 
 # Esquema para actualizar
 class IdiomUpdate(BaseModel):
-    pages_id: Optional[int] = None
-    phrase: Optional[str] = None
-    meaning: Optional[str] = None
-    example: Optional[str] = None
-
-    model_config = {
-        "from_attributes": True
-    }
+    pages_id: Optional[int] = Field(default=None)
+    phrase: Optional[str] = Field(default=None, max_length=30)
+    meaning: Optional[str] = Field(default=None, max_length=255)
+    example: Optional[str] = Field(default=None, max_length=255)

@@ -14,9 +14,9 @@ from app.models import *
 app = FastAPI(title=settings.app_name)
 
 origins = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://code-english-beta.vercel.app/"
+    settings.url_localhost_frontend,
+    settings.url_alternativa_frontend,
+    settings.url_frontend_produccion
 ]
 
 app.add_middleware(

@@ -44,7 +44,7 @@ async def get_synonym(pages_id: int, conex: AsyncSession = Depends(get_db)):
         synonyms = result.scalars().all()
 
         if not synonyms:
-            raise HTTPException(status_code=400, detail="Synonym no encontrados")
+            raise HTTPException(status_code=404, detail="Synonym no encontrados")
 
         return synonyms
 
@@ -56,14 +56,14 @@ async def get_synonym(pages_id: int, conex: AsyncSession = Depends(get_db)):
 # API para actualizar synonym
 @router.patch("/update_synonym/{id}")
 async def update_synonym(id: int, synonym: SynonymUpdate,
-                        conex: AsyncSession = Depends(get_db)):
+                         conex: AsyncSession = Depends(get_db)):
     try:
         stmt = select(tbl_Synonym).where(tbl_Synonym.id == id)
         result = await conex.execute(stmt)
         upt_synonym = result.scalars().first()
 
         if not upt_synonym:
-            raise HTTPException(status_code=400, detail="Synonym no encontrado")
+            raise HTTPException(status_code=404, detail="Synonym no encontrado")
 
         upt_data = synonym.model_dump(exclude_unset=True)
 

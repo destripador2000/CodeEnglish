@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 
 
@@ -17,16 +17,12 @@ class SynonymResponse(BaseModel):
 # Creando esquema para crear synonym
 class SynonymCreate(BaseModel):
     pages_id: int
-    word: str
-    synonym: str
+    word: str = Field(max_length=30)
+    synonym: str = Field(max_length=30)
 
 
 # Esquema para actualizar
 class SynonymUpdate(BaseModel):
-    pages_id: Optional[int] = None
-    word: Optional[str] = None
-    synonym: Optional[str] = None
-
-    model_config = {
-       "from_attributes": True
-    }
+    pages_id: Optional[int] = Field(default=None)
+    word: Optional[str] = Field(default=None, max_length=30)
+    synonym: Optional[str] = Field(default=None, max_length=30)

@@ -37,7 +37,7 @@ async def get_pages(module_type: str, conex: AsyncSession = Depends(get_db)):
         pages = result.scalars().all()
 
         if not pages:
-            raise HTTPException(status_code=400, detail="Páginas no encontradas")
+            raise HTTPException(status_code=404, detail="Páginas no encontradas")
 
         return pages
 
@@ -49,14 +49,14 @@ async def get_pages(module_type: str, conex: AsyncSession = Depends(get_db)):
 # API para actualizar página
 @router.patch("/update_page/{id}")
 async def update_page(id: int, page: PageUpdate,
-                     conex: AsyncSession = Depends(get_db)):
+                      conex: AsyncSession = Depends(get_db)):
     try:
         stmt = select(tblPage).where(tblPage.id == id)
         result = await conex.execute(stmt)
         upt_page = result.scalars().first()
 
         if not upt_page:
-            raise HTTPException(status_code=400, detail="Página no encontrada")
+            raise HTTPException(status_code=404, detail="Página no encontrada")
 
         upt_data = page.model_dump(exclude_unset=True)
 

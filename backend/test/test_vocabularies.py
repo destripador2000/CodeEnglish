@@ -7,7 +7,7 @@ def test_create_vocabulary_succes(client):
         "meaning": "Despliegue"
     }
 
-    response = client.post("/router/rt_vocabularies/create_vocabulary", json=payload)
+    response = client.post("/api/rt_vocabularies/create_vocabulary", json=payload)
 
     assert response.status_code == 200
 
@@ -23,7 +23,7 @@ def test_create_vocabulary_fail(client):
         "word": "Incompleto"
     }
 
-    response = client.post("/router/rt_vocabularies/create_vocabulary", json=payload_incompleto)
+    response = client.post("/api/rt_vocabularies/create_vocabulary", json=payload_incompleto)
 
     assert response.status_code == 422
     data = response.json()
@@ -39,9 +39,9 @@ def test_get_vocabulary_succes(client):
         "word": "Testing",
         "meaning": "Pruebas"
     }
-    client.post("/router/rt_vocabularies/create_vocabulary", json=payload)
+    client.post("/api/rt_vocabularies/create_vocabulary", json=payload)
 
-    response = client.get(f"/router/rt_vocabularies/vocabulary/{id_pagina_prueba}")
+    response = client.get(f"/api/rt_vocabularies/vocabulary/{id_pagina_prueba}")
 
     assert response.status_code == 200
     data = response.json()
@@ -55,7 +55,7 @@ def test_get_vocabulary_succes(client):
 # Función test para GET (Fallido)
 def test_get_vocabulary_fail(client):
 
-    response = client.get("/router/rt_vocabularies/vocabulary/99")
+    response = client.get("/api/rt_vocabularies/vocabulary/99")
 
     assert response.status_code == 404
     assert response.json()["detail"] == "Verbos no encontrados"
@@ -69,13 +69,13 @@ def test_update_vocabulary_success(client):
         "word": "Bug",
         "meaning": "Bicho"
     }
-    response_post = client.post("/router/rt_vocabularies/create_vocabulary", json=payload_crear)
+    response_post = client.post("/api/rt_vocabularies/create_vocabulary", json=payload_crear)
     id_creado = response_post.json()["id"]
 
     payload_patch = {
         "meaning": "Error de software"
     }
-    response_patch = client.patch(f"/router/rt_vocabularies/update_vocabulary/{id_creado}", json=payload_patch)
+    response_patch = client.patch(f"/api/rt_vocabularies/update_vocabulary/{id_creado}", json=payload_patch)
 
     assert response_patch.status_code == 200
     data = response_patch.json()
@@ -89,7 +89,7 @@ def test_update_vocabulary_fail(client):
 
     payload_patch = {"word": "Fantasma"}
 
-    response = client.patch("/router/rt_vocabularies/update_vocabulary/999", json=payload_patch)
+    response = client.patch("/api/rt_vocabularies/update_vocabulary/999", json=payload_patch)
 
     assert response.status_code == 404
     assert response.json()["detail"] == "Vocabulario no encontrado"
@@ -103,22 +103,22 @@ def test_delete_vocabulary_success(client):
         "word": "DeleteMe",
         "meaning": "Bórrame"
     }
-    response_post = client.post("/router/rt_vocabularies/create_vocabulary", json=payload_crear)
+    response_post = client.post("/api/rt_vocabularies/create_vocabulary", json=payload_crear)
     id_creado = response_post.json()["id"]
 
-    response_delete = client.delete(f"/router/rt_vocabularies/delete_vocabulary/{id_creado}")
+    response_delete = client.delete(f"/api/rt_vocabularies/delete_vocabulary/{id_creado}")
 
     assert response_delete.status_code == 200
     assert response_delete.json()["mensaje"] == "Vocabulario eliminado correctamente"
 
-    response_verificar = client.get("/router/rt_vocabularies/vocabulary/1")
+    response_verificar = client.get("/api/rt_vocabularies/vocabulary/1")
     assert response_verificar.status_code == 404
 
 
 # Función test para ENDPOINT DELETE (fallido)
 def test_delete_vocabulary_fail(client):
 
-    response = client.delete("/router/rt_vocabularies/delete_vocabulary/999")
+    response = client.delete("/api/rt_vocabularies/delete_vocabulary/999")
 
     assert response.status_code == 404
     assert response.json()["detail"] == "Vocabulario no encontrado"

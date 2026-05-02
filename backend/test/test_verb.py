@@ -10,7 +10,7 @@ def test_create_verb(client):
         "past_part": "Bought"
     }
 
-    response = client.post("/router/rt_verbs/create_verb", json=payload)
+    response = client.post("/api/rt_verbs/create_verb", json=payload)
 
     assert response.status_code == 200
 
@@ -25,7 +25,7 @@ def test_create_verb_fail(client):
         "base_form": "Incompleto",
     }
 
-    response = client.post("/router/rt_verbs/create_verb", json=payload)
+    response = client.post("/api/rt_verbs/create_verb", json=payload)
 
     assert response.status_code == 422
     data = response.json()
@@ -45,9 +45,9 @@ def test_get_verb_succes(client):
         "present_part": "Buying",
         "past_part": "Bought"
     }
-    client.post("/router/rt_verbs/create_verb", json=payload)
+    client.post("/api/rt_verbs/create_verb", json=payload)
 
-    response = client.get(f"/router/rt_verbs/verbs/{id_pagina_prueba}")
+    response = client.get(f"/api/rt_verbs/verbs/{id_pagina_prueba}")
 
     assert response.status_code == 200
     data = response.json()
@@ -61,7 +61,7 @@ def test_get_verb_succes(client):
 # Función test de ENPOINT GET (fallido)
 def test_get_verb_fail(client):
 
-    response = client.get("/router/rt_verbs/verbs/99")
+    response = client.get("/api/rt_verbs/verbs/99")
 
     assert response.status_code == 404
     assert response.json()["detail"] == "Verbos no encontrados"
@@ -79,14 +79,14 @@ def test_update_verb_success(client):
         "past_part": "Bought"
     }
 
-    response = client.post("/router/rt_verbs/create_verb", json=payload)
+    response = client.post("/api/rt_verbs/create_verb", json=payload)
     id_create = response.json()["id"]
 
     payload_patch = {
         "base_form": "Purchase"
     }
 
-    response_patch = client.patch(f"/router/rt_verbs/update_verb/{id_create}", json=payload_patch)
+    response_patch = client.patch(f"/api/rt_verbs/update_verb/{id_create}", json=payload_patch)
 
     assert response_patch.status_code == 200
     data = response_patch.json()
@@ -99,7 +99,7 @@ def test_update_verb_success(client):
 def test_update_verb_fail(client):
     payload_patch = {"base_form": "Buy"}
 
-    response = client.patch("/router/rt_verbs/update_verb/999", json=payload_patch)
+    response = client.patch("/api/rt_verbs/update_verb/999", json=payload_patch)
 
     assert response.status_code == 404
     assert response.json()["detail"] == "Verbo no encontrado"
@@ -117,21 +117,21 @@ def test_delete_verb_succes(client):
         "present_part": "Buying",
         "past_part": "Bought"
     }
-    response_post = client.post("/router/rt_verbs/create_verb", json=payload_post)
+    response_post = client.post("/api/rt_verbs/create_verb", json=payload_post)
     id_created = response_post.json()["id"]
 
-    response_delete = client.delete(f"/router/rt_verbs/delete_verb/{id_created}")
+    response_delete = client.delete(f"/api/rt_verbs/delete_verb/{id_created}")
 
     assert response_delete.status_code == 200
     assert response_delete.json()["mensaje"] == "Verbo eliminado correctamente"
 
-    response_review = client.get("/router/rt_verbs/verbs/1")
+    response_review = client.get("/api/rt_verbs/verbs/1")
     assert response_review.status_code == 404
 
 
 # Función test para ENDPOINT DELETE (fallido)
 def test_delete_verb_fail(client):
-    response = client.delete("/router/rt_verbs/delete_verb/99")
+    response = client.delete("/api/rt_verbs/delete_verb/99")
 
     assert response.status_code == 404
     assert response.json()["detail"] == "Verbo no encontrado"

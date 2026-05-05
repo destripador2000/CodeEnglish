@@ -43,14 +43,14 @@ async def get_synonym(pages_id: int, conex: AsyncSession = Depends(get_db)):
         result = await conex.execute(stmt)
         synonyms = result.scalars().all()
 
-        if not synonyms:
-            raise HTTPException(status_code=404, detail="Synonym no encontrados")
-
-        return synonyms
-
     except Exception as ex:
         print(f"Error: {ex}")
-        raise HTTPException(status_code=500, detail="Problemas con la peticións")
+        raise HTTPException(status_code=500, detail="Problemas con la peticion")
+        
+    if not synonyms:
+        raise HTTPException(status_code=404, detail="Synonym no encontrados")
+
+    return synonyms
 
 
 # API para actualizar synonym

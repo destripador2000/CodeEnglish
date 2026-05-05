@@ -56,3 +56,28 @@ def test_get_synonym_fail(client):
 
     assert response.status_code == 404
     assert response.json()["detail"] == "Synonym no encontrados"
+
+
+# Función test para actualizar synonym (Éxitoso)
+def test_patch_synonym_succes(client):
+
+    payload={
+        "pages_id": 1,
+        "word": "Test",
+        "synonym": "Quiz"
+    }
+
+    response = client.post("/api/rt_synonyms/create_synonym", json=payload)
+    id_create = response.json()["id"]
+
+    payload_patch ={
+        "synonym": "Exam"
+    }
+
+    response_patch = client.patch(f"/api/rt_synonyms/update_synonym/{id_create}", json=payload_patch)
+
+    assert response_patch.status_code == 200
+    data = response_patch.json()
+
+    assert data["synonym"] == "Exam"
+    assert data["word"] == "Test" 

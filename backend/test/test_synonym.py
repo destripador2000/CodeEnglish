@@ -48,3 +48,11 @@ def test_get_synonym_succes(client):
     assert len(data) == 1
     assert data[0]["word"] == "Test"
     assert data[0]["pages_id"] == 5
+
+# Función test para obtener synonym (fallido)
+def test_get_synonym_fail(client):
+
+    response = client.get("/api/rt_synonyms/synonyms/99")
+
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Synonym no encontrados"
